@@ -20,7 +20,7 @@ public class StartupBean {
         System.out.println("INICIALIZANDO DATOS");
     }
 
-    @Schedule(hour = "*", minute = "0,15,30,45", persistent = false, info = "Notificaciones EveryDay 16 y 22 hs")
+    @Schedule(hour = "*", minute = "0,15,30,45", persistent = false, info = "Obtencion de cambios cada 15 minutos")
     public void obtenerCotizaciones() throws IOException {
         System.out.println("OBTENIENDO COTIZACIONES");
         //OBTIENE LA SECCION In the news de wikipedia
