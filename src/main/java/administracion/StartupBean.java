@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -18,11 +19,12 @@ import java.io.IOException;
 @Singleton
 public class StartupBean {
 
+    @EJB
+    CasaCambiariaDao casaCambiariaDao;
+
     @PostConstruct
     public void startupTasks() {
         System.out.println("INICIALIZANDO DATOS");
-
-        CasaCambiariaDao casaCambiariaDao = new CasaCambiariaDao();
 
         CasaCambiaria cambioSir = new CasaCambiaria("Cambio SIR", 35.70, 37.70, 38.40, 42.3, 0.50, 0.95, 8.00, 9.90, "https://www.cambiosir.com.uy/", "#niidea");
         CasaCambiaria cambioIndumex = new CasaCambiaria("Cambio Indumex", 36.15, 38.15, 39.90, 42.90, 0.55, 0.85, 8.50, 9.50, "https://www.indumex.com/", "#niidea");
