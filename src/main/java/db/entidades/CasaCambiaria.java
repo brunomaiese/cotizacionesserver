@@ -12,24 +12,38 @@ public class CasaCambiaria {
 
     private String nombre;
 
-    private Double DolarCompra;
+    private Double dolarCompra;
 
-    private Double DolarVenta;
+    private Double dolarVenta;
 
-    private Double EuroCompra;
+    private Double euroCompra;
 
-    private Double EuroVenta;
+    private Double euroVenta;
 
-    private Double ArgentinoCompra;
+    private Double argentinoCompra;
 
-    private Double ArgentinoVenta;
+    private Double argentinoVenta;
 
-    private Double RealCompra;
+    private Double realCompra;
 
-    private Double RealVenta;
+    private Double realVenta;
 
     public String getUrl() {
         return url;
+    }
+
+    public CasaCambiaria(String nombre, Double dolarCompra, Double dolarVenta, Double euroCompra, Double euroVenta, Double argentinoCompra, Double argentinoVenta, Double realCompra, Double realVenta, String url, String selectorScrapping) {
+        this.nombre = nombre;
+        this.dolarCompra = dolarCompra;
+        this.dolarVenta = dolarVenta;
+        this.euroCompra = euroCompra;
+        this.euroVenta = euroVenta;
+        this.argentinoCompra = argentinoCompra;
+        this.argentinoVenta = argentinoVenta;
+        this.realCompra = realCompra;
+        this.realVenta = realVenta;
+        this.url = url;
+        this.selectorScrapping = selectorScrapping;
     }
 
     public void setUrl(String url) {
@@ -49,69 +63,66 @@ public class CasaCambiaria {
     private String selectorScrapping;
 
     public Double getDolarCompra() {
-        return DolarCompra;
+        return dolarCompra;
     }
 
     public void setDolarCompra(Double dolarCompra) {
-        DolarCompra = dolarCompra;
+        this.dolarCompra = dolarCompra;
     }
 
     public Double getDolarVenta() {
-        return DolarVenta;
+        return dolarVenta;
     }
 
-    public void setDolarVenta(Double dolarVenta) {
-        DolarVenta = dolarVenta;
-    }
+    public void setDolarVenta(Double dolarVenta) { this.dolarVenta = dolarVenta; }
 
     public Double getEuroCompra() {
-        return EuroCompra;
+        return euroCompra;
     }
 
     public void setEuroCompra(Double euroCompra) {
-        EuroCompra = euroCompra;
+        this.euroCompra = euroCompra;
     }
 
     public Double getEuroVenta() {
-        return EuroVenta;
+        return euroVenta;
     }
 
     public void setEuroVenta(Double euroVenta) {
-        EuroVenta = euroVenta;
+        this.euroVenta = euroVenta;
     }
 
     public Double getArgentinoCompra() {
-        return ArgentinoCompra;
+        return argentinoCompra;
     }
 
     public void setArgentinoCompra(Double argentinoCompra) {
-        ArgentinoCompra = argentinoCompra;
+        this.argentinoCompra = argentinoCompra;
     }
 
     public Double getArgentinoVenta() {
-        return ArgentinoVenta;
+        return argentinoVenta;
     }
 
     public void setArgentinoVenta(Double argentinoVenta) {
-        ArgentinoVenta = argentinoVenta;
+        this.argentinoVenta = argentinoVenta;
     }
 
     public Double getRealCompra() {
-        return RealCompra;
+        return realCompra;
     }
 
     public void setRealCompra(Double realCompra) {
-        RealCompra = realCompra;
+        this.realCompra = realCompra;
     }
 
     public Double getRealVenta() {
-        return RealVenta;
+        return realVenta;
     }
 
     public void setRealVenta(Double realVenta) {
-        RealVenta = realVenta;
+        this.realVenta = realVenta;
     }
-
 
     @OneToMany(mappedBy = "casaCambiaria", cascade = CascadeType.ALL)
     private List<Direccion> direcciones = new ArrayList<Direccion>();

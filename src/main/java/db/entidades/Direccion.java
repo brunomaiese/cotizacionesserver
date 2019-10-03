@@ -21,6 +21,13 @@ public class Direccion {
 
     public Direccion(){}
 
+    public Direccion(String direccion, Double latitud, Double longitud, CasaCambiaria casaCambiaria) {
+        this.direccion = direccion;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.casaCambiaria = casaCambiaria;
+    }
+
     public Direccion(String nombre) {
         this.direccion = nombre;
     }

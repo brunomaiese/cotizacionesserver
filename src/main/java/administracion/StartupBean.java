@@ -1,5 +1,6 @@
 package administracion;
 
+import db.entidades.CasaCambiaria;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,6 +18,7 @@ public class StartupBean {
 
     @PostConstruct
     public void startupTasks() {
+
         System.out.println("INICIALIZANDO DATOS");
     }
 
