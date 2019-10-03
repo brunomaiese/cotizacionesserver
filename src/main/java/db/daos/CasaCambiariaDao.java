@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class CasaCambiariaDao extends AbstractDao<Long, CasaCambiaria> {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "PG_COTIZACIONES")
     public EntityManager entityManager;
 
     @Override

@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class DireccionDao extends AbstractDao<Long, Direccion> {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "PG_COTIZACIONES")
     public EntityManager entityManager;
 
     @Override
