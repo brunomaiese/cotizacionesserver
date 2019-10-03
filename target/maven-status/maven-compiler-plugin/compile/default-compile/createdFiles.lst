@@ -1,6 +1,8 @@
 services\CotizacionService.class
 db\daos\CasaCambiariaDao.class
-db\daos\AbstractDao.class
+db\entidades\Direccion.class
 services\Controlador.class
+db\daos\AbstractDao.class
 db\entidades\CasaCambiaria.class
+db\daos\DireccionDao.class
 administracion\StartupBean.class
