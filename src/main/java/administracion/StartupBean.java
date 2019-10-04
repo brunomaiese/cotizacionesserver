@@ -81,11 +81,6 @@ public class StartupBean {
                 postData.append(URLEncoder.encode(String.valueOf(parametro.getValue()), "UTF-8"));
             }
 
-            String aux = postData.toString();
-            aux = aux.replaceAll(" ", "+");
-            postData.setLength(0);
-            postData.append(aux);
-
             byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -103,7 +98,12 @@ public class StartupBean {
             }
             in.close();
 
-            //JSONObject myResponse = new JSONObject(response.toString());
+            String json = response.toString();
+            json = json.substring(1, json.length() - 1);
+            JSONObject punto = new JSONObject(json);
+
+            String a = punto.toString();
+
 
         }
         catch (IOException e) {
