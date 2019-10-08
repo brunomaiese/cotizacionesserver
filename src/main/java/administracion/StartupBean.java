@@ -5,7 +5,6 @@ import db.daos.CasaCambiariaDao;
 import db.daos.DireccionDao;
 import db.entidades.CasaCambiaria;
 import db.entidades.Direccion;
-import javafx.util.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,8 +29,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Startup
 @Singleton
@@ -43,9 +40,39 @@ public class StartupBean {
     @EJB
     DireccionDao direccionDao;
 
+    private class Punto
+    {
+        private Double latitud;
+
+        private Double longitud;
+
+        public Punto(){}
+
+        public Punto(Double latitud, Double longitud)
+        {
+            this.latitud = latitud;
+            this.longitud = longitud;
+        }
+
+        public Double getLatitud() {
+            return latitud;
+        }
+
+        public void setLatitud(double latitud) {
+            this.latitud = latitud;
+        }
+
+        public Double getLongitud() { return longitud; }
+
+        public void setLongitud(Double longitud) {
+            this.longitud = longitud;
+        }
+    }
+
+
     @PostConstruct
     public void startupTasks() {
-        ObtenerCoordenadas("\'Buenos aires 451\'");
+
         System.out.println("INICIALIZANDO DATOS");
 
         CasaCambiaria cambioSir = new CasaCambiaria("Cambio SIR", 35.70, 37.70, 38.40, 42.3, 0.50, 0.95, 8.00, 9.90, "https://www.cambiosir.com.uy/", "#niidea");
@@ -56,13 +83,39 @@ public class StartupBean {
         casaCambiariaDao.create(cambioIndumex);
         casaCambiariaDao.create(cambioGales);
 
+        Punto puntoSir1 = ObtenerCoordenadas("\'Misiones 1374\'");
+        Direccion direccionSir1 = new Direccion("Misiones 1374", puntoSir1.latitud, puntoSir1.longitud, cambioSir);
+
+        Punto puntoSir2 = ObtenerCoordenadas("\'Avda. Arocena 1649\'");
+        Direccion direccionSir2 = new Direccion("Avda. Arocena 1649", puntoSir2.latitud, puntoSir2.longitud, cambioSir);
+
+        Punto puntoSir3 = ObtenerCoordenadas("\'AV GRAL RIVERA 2348\'");
+        Direccion direccionSir3 = new Direccion("Avda. Rivera 2348", puntoSir3.latitud, puntoSir3.longitud, cambioSir);
+
+        Punto puntoSir4 = ObtenerCoordenadas("\'Avda. Agraciada 4176\'");
+        Direccion direccionSir4 = new Direccion("Avda. Agraciada 4176", puntoSir4.latitud, puntoSir4.longitud, cambioSir);
+
+        Punto puntoSir5 = ObtenerCoordenadas("\'Colonia 760\'");
+        Direccion direccionSir5 = new Direccion("Colonia 760", puntoSir5.latitud, puntoSir5.longitud, cambioSir);
+
+        Punto puntoSir6 = ObtenerCoordenadas("\'Palmar 2311\'");
+        Direccion direccionSir6 = new Direccion("Palmar 2311", puntoSir6.latitud, puntoSir6.longitud, cambioSir);
+
+        direccionDao.create(direccionSir1);
+        direccionDao.create(direccionSir2);
+        direccionDao.create(direccionSir3);
+        direccionDao.create(direccionSir4);
+        direccionDao.create(direccionSir5);
+        direccionDao.create(direccionSir6);
+
 
 
     }
 
-    public Double ObtenerCoordenadas(String direccion)
+    public Punto ObtenerCoordenadas(String direccion)
     {
-        String url = "http://geo.correo.com.uy/serviciosv2/BusquedaDireccion";
+        String url = "http://geo.correo.com.uy/servicios/BusquedaDireccion";
+        Punto punto = null;
         try {
             URL obj = new URL(url);
             Map<String, Object> parametros = new LinkedHashMap<String, Object>();
@@ -100,16 +153,20 @@ public class StartupBean {
 
             String json = response.toString();
             json = json.substring(1, json.length() - 1);
-            JSONObject punto = new JSONObject(json);
+            JSONObject puntoJSon = new JSONObject(json);
 
-            String a = punto.toString();
+            Double latitud = puntoJSon.getDouble("puntoX");
+            Double longitud = puntoJSon.getDouble("puntoY");
 
-
+            punto = new Punto(latitud, longitud);
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-        return 0.0;
+        finally {
+            return punto;
+        }
+
     }
 
     @Schedule(hour = "*", minute = "0,15,30,45", persistent = false, info = "Obtencion de cambios cada 15 minutos")
