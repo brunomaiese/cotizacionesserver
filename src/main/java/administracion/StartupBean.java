@@ -101,12 +101,32 @@ public class StartupBean {
         Punto puntoSir6 = ObtenerCoordenadas("\'Palmar 2311\'");
         Direccion direccionSir6 = new Direccion("Palmar 2311", puntoSir6.latitud, puntoSir6.longitud, cambioSir);
 
+        Punto puntoIndumex1 = ObtenerCoordenadas("\'Rincon 473\'");
+        Direccion direccionIndumex1 = new Direccion("Rincon 473", puntoIndumex1.latitud, puntoIndumex1.longitud, cambioIndumex);
+
+        Punto puntoIndumex2 = ObtenerCoordenadas("\'Luis A.Herrera 1290\'");
+        Direccion direccionIndumex2 = new Direccion("Luis A.Herrera 1290", puntoIndumex2.latitud, puntoIndumex2.longitud, cambioIndumex);
+
+        Punto puntoIndumex3 = ObtenerCoordenadas("\'Luis A.Herrera 3365\'");
+        Direccion direccionIndumex3 = new Direccion("Luis A.Herrera 3365", puntoIndumex3.latitud, puntoIndumex3.longitud, cambioIndumex);
+
+        Punto puntoIndumex4 = ObtenerCoordenadas("\'Avda Italia 5775'");
+        Direccion direccionIndumex4 = new Direccion("Avda Italia 5775", puntoIndumex4.latitud, puntoIndumex4.longitud, cambioIndumex);
+
+        Punto puntoIndumex5 = ObtenerCoordenadas("\'Bulevar General Artigas+1825\'");
+        Direccion direccionIndumex5 = new Direccion("Bulevar General Artigas 1825", puntoIndumex5.latitud, puntoIndumex5.longitud, cambioIndumex);
+
         direccionDao.create(direccionSir1);
         direccionDao.create(direccionSir2);
         direccionDao.create(direccionSir3);
         direccionDao.create(direccionSir4);
         direccionDao.create(direccionSir5);
         direccionDao.create(direccionSir6);
+        direccionDao.create(direccionIndumex1);
+        direccionDao.create(direccionIndumex2);
+        direccionDao.create(direccionIndumex3);
+        direccionDao.create(direccionIndumex4);
+        direccionDao.create(direccionIndumex5);
 
 
 
