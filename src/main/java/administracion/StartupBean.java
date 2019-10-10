@@ -5,15 +5,16 @@ import db.entidades.CasaCambiaria;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.persistence.EntityManager;
 import java.io.IOException;
+import java.util.List;
 
 @Startup
 @Singleton
@@ -36,16 +37,58 @@ public class StartupBean {
 
     }
 
-    @Schedule(hour = "*", minute = "0,15,30,45", persistent = false, info = "Obtencion de cambios cada 15 minutos")
-    public void obtenerCotizaciones() throws IOException {
-        System.out.println("OBTENIENDO COTIZACIONES");
-        //OBTIENE LA SECCION In the news de wikipedia
-        Document doc = Jsoup.connect("http://en.wikipedia.org/").get();
-        Elements newsHeadlines = doc.select("#mp-itn b a");
-        for (Element headline : newsHeadlines) {
-            System.out.println(headline.toString());
-        }
+    @Schedule(hour = "22", minute = "*", persistent = false, info = "Obtencion de cambios cada 15 minutos")
+    public void obtenerCotizacionesSIR() throws IOException {
+        try {
+            System.out.println("OBTENIENDO COTIZACIONES");
+            // load page using HTML Unit and fire scripts
+            //C:\Users\brunom.ANC\Desktop\chromedriver_win32
+            System.setProperty("webdriver.chrome.driver", "C:\\Users\\brunom.ANC\\Desktop\\chromedriver_win32\\chromedriver.exe");
+            WebDriver driver = new ChromeDriver();
+            driver.get("https://www.cambiosir.com.uy");
 
+            Document doc = Jsoup.parse(driver.getPageSource());
+
+            Element iframe = doc.select("iframe").first();
+            String iframeSrc = iframe.attr("src");
+            if (iframeSrc != null) {
+                WebDriver driver2 = new ChromeDriver();
+
+                driver2.get(iframeSrc);
+                Document iframeContentDoc = Jsoup.parse(driver2.getPageSource());
+                Element table = iframeContentDoc.select("#theTable").first();
+                List<Element> rows = table.select("tr");
+                for(Element e :rows){
+                    e.select("td");
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Schedule(hour = "*", minute = "*", persistent = false, info = "Obtencion de cambios cada 15 minutos")
+    public void obtenerCotizacionesIndumex() throws IOException {
+        try {
+            System.out.println("OBTENIENDO COTIZACIONES");
+            System.setProperty("webdriver.chrome.driver", "C:\\Users\\brunom.ANC\\Desktop\\chromedriver_win32\\chromedriver.exe");
+            WebDriver driver = new ChromeDriver();
+            driver.get("https://www.indumex.com/");
+
+            Document doc = Jsoup.parse(driver.getPageSource());
+            String compraDolar= doc.select("#compraDolar").text();
+            String ventaDolar= doc.select("#ventaDolar").text();
+            String compraArg=doc.select("#compraArg").text();
+            String ventaArg=doc.select("#ventaArg").text();
+            String compraReal=doc.select("#compraReal").text();
+            String ventaReal=doc.select("#ventaReal").text();
+            String compraEuro=doc.select("#compraEuro").text();
+            String ventaEuro=doc.select("#ventaEuro").text();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }
