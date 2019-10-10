@@ -59,6 +59,7 @@ public class StartupBean {
                 Element table = iframeContentDoc.select("#theTable").first();
                 List<Element> rows = table.select("tr");
                 for(Element e :rows){
+                    //TODO recorrer y guardar las cotizaciones
                     e.select("td");
                 }
 
@@ -68,7 +69,7 @@ public class StartupBean {
         }
     }
 
-    @Schedule(hour = "*", minute = "*", persistent = false, info = "Obtencion de cambios cada 15 minutos")
+    @Schedule(hour = "22", minute = "*", persistent = false, info = "Obtencion de cambios cada 15 minutos")
     public void obtenerCotizacionesIndumex() throws IOException {
         try {
             System.out.println("OBTENIENDO COTIZACIONES");
@@ -86,6 +87,22 @@ public class StartupBean {
             String compraEuro=doc.select("#compraEuro").text();
             String ventaEuro=doc.select("#ventaEuro").text();
 
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Schedule(hour = "*", minute = "*", persistent = false, info = "Obtencion de cambios cada 15 minutos")
+    public void obtenerCotizacionesGales() throws IOException {
+        try {
+            System.out.println("OBTENIENDO COTIZACIONES");
+            System.setProperty("webdriver.chrome.driver", "C:\\Users\\brunom.ANC\\Desktop\\chromedriver_win32\\chromedriver.exe");
+            WebDriver driver = new ChromeDriver();
+            driver.get("http://www.gales.com.uy/home/");
+
+            Document doc = Jsoup.parse(driver.getPageSource());
+            doc.select("table").select("tr").select("td");
+            //TODO recorrer y guardar las cotizaciones
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
