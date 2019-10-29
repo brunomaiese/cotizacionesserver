@@ -28,11 +28,7 @@ public class CasaCambiaria {
 
     private Double realVenta;
 
-    public String getUrl() {
-        return url;
-    }
-
-    public CasaCambiaria(String nombre, Double dolarCompra, Double dolarVenta, Double euroCompra, Double euroVenta, Double argentinoCompra, Double argentinoVenta, Double realCompra, Double realVenta, String url, String selectorScrapping) {
+    public CasaCambiaria(String nombre, Double dolarCompra, Double dolarVenta, Double euroCompra, Double euroVenta, Double argentinoCompra, Double argentinoVenta, Double realCompra, Double realVenta) {
         this.nombre = nombre;
         this.dolarCompra = dolarCompra;
         this.dolarVenta = dolarVenta;
@@ -42,25 +38,7 @@ public class CasaCambiaria {
         this.argentinoVenta = argentinoVenta;
         this.realCompra = realCompra;
         this.realVenta = realVenta;
-        this.url = url;
-        this.selectorScrapping = selectorScrapping;
     }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getSelectorScrapping() {
-        return selectorScrapping;
-    }
-
-    public void setSelectorScrapping(String selectorScrapping) {
-        this.selectorScrapping = selectorScrapping;
-    }
-
-    private String url;
-
-    private String selectorScrapping;
 
     public Double getDolarCompra() {
         return dolarCompra;
