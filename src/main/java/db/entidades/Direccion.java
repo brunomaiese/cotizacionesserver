@@ -16,7 +16,7 @@ public class Direccion {
 
     private Double longitud;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private CasaCambiaria casaCambiaria;
 
     public Direccion(){}
