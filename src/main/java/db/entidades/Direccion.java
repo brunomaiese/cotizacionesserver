@@ -2,9 +2,10 @@ package db.entidades;
 
 import javax.persistence.*;
 import java.awt.*;
+import java.io.Serializable;
 
 @Entity
-public class Direccion {
+public class Direccion implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

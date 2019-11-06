@@ -1,12 +1,15 @@
 package services;
 
+import administracion.CotizacionesBL;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import db.entidades.Direccion;
 import administracion.StartupBean;
+import dtypes.RespuestaCotizaciones;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.ejb.EJB;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -25,7 +28,8 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Transactional
 public class CotizacionService {
 
-
+    @EJB
+    CotizacionesBL cotizacionesBL;
 
     @GET
     @Path("/prueba")
@@ -35,11 +39,13 @@ public class CotizacionService {
 
     @GET
     @Path("/cotizaciones")
-    public Response obtenerCotizaciones(double longitud, double latitud) throws UnirestException {
-        StartupBean administracion = new StartupBean();
+    public RespuestaCotizaciones obtenerCotizaciones() throws UnirestException {
 
-        JSONObject puntos = administracion.obtenerPuntosConCotizaciones(longitud, latitud);
-
-        return Response.ok(puntos, APPLICATION_JSON).build();
+        double latitud= -34.9185225;
+        double longitud = -56.1806222;
+        RespuestaCotizaciones puntos = cotizacionesBL.obtenerPuntosConCotizaciones(longitud, latitud);
+        return puntos;
     }
+
+
 }
