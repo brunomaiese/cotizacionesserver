@@ -1,18 +1,12 @@
 package administracion;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import db.daos.CasaCambiariaDao;
 import db.daos.DireccionDao;
-import db.entidades.Direccion;
 import dtypes.RespuestaCotizaciones;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.util.List;
 
 @Stateless
 public class CotizacionesBL {
@@ -24,7 +18,7 @@ public class CotizacionesBL {
     DireccionDao direccionDao;
 
     public RespuestaCotizaciones obtenerPuntosConCotizaciones(double longitud, double latitud) throws UnirestException {
-        List<Direccion> direcciones = direccionDao.findAll();
+        /*List<Direccion> direcciones = direccionDao.findAll();
 
         final String URL = "http://router.project-osrm.org/route/v1/driving/";
         final String PARAMETERS = "?overview=false";
@@ -76,13 +70,18 @@ public class CotizacionesBL {
         }
 
         RespuestaCotizaciones respuestaCotizaciones= new RespuestaCotizaciones();
-//        respuestaCotizaciones.setDireccionGales(direccionGales);
-  //      respuestaCotizaciones.setDireccionIndumex(direccionIndumex);
-    //    respuestaCotizaciones.setDireccionSir(direccionSir);
+        respuestaCotizaciones.setDireccionGales(direccionGales);
+        respuestaCotizaciones.setDireccionIndumex(direccionIndumex);
+        respuestaCotizaciones.setDireccionSir(direccionSir);
         respuestaCotizaciones.setDistanciaGales(distanciaGales);
         respuestaCotizaciones.setDistanciaIndumex(distanciaIndumex);
-        respuestaCotizaciones.setDistanciaSir(distanciaSir);
+        respuestaCotizaciones.setDistanciaSir(distanciaSir);*/
 
+
+        RespuestaCotizaciones respuestaCotizaciones = new RespuestaCotizaciones();
+        respuestaCotizaciones.setDistanciaGales(500);
+        respuestaCotizaciones.setDistanciaIndumex(300);
+        respuestaCotizaciones.setDistanciaSir(200);
         return respuestaCotizaciones;
     }
 }
