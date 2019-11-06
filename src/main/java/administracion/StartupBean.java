@@ -1,10 +1,14 @@
 package administracion;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import db.daos.CasaCambiariaDao;
 import db.daos.DireccionDao;
 import db.entidades.CasaCambiaria;
 import db.entidades.Direccion;
+import org.json.JSONArray;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -41,16 +45,17 @@ public class StartupBean {
     @EJB
     DireccionDao direccionDao;
 
-    private class Punto
-    {
+
+
+    private class Punto {
         private Double latitud;
 
         private Double longitud;
 
-        public Punto(){}
+        public Punto() {
+        }
 
-        public Punto(Double latitud, Double longitud)
-        {
+        public Punto(Double latitud, Double longitud) {
             this.latitud = latitud;
             this.longitud = longitud;
         }
@@ -63,7 +68,9 @@ public class StartupBean {
             this.latitud = latitud;
         }
 
-        public Double getLongitud() { return longitud; }
+        public Double getLongitud() {
+            return longitud;
+        }
 
         public void setLongitud(Double longitud) {
             this.longitud = longitud;
@@ -110,7 +117,7 @@ public class StartupBean {
 
         Direccion direccionIndumex6 = new Direccion("Acevedo Díaz 1785", -56.1652019867311, -34.89430948218002, cambioIndumex);
 
-        Direccion direccionGales1= new Direccion("Luis A. Herrera 1248", -56.13709712672926, -34.904309450383465, cambioGales);
+        Direccion direccionGales1 = new Direccion("Luis A. Herrera 1248", -56.13709712672926, -34.904309450383465, cambioGales);
 
         Direccion direccionGales2 = new Direccion("Av. Americas 6000", -56.14696499999994, -34.797236999999974, cambioGales);
 
@@ -175,7 +182,7 @@ public class StartupBean {
                 Document iframeContentDoc = Jsoup.parse(driver2.getPageSource());
                 Element table = iframeContentDoc.select("#theTable").first();
                 List<Element> rows = table.select("tr");
-                for(Element e :rows){
+                for (Element e : rows) {
                     //TODO recorrer y guardar las cotizaciones
                     e.select("td");
                 }
@@ -195,14 +202,14 @@ public class StartupBean {
             driver.get("https://www.indumex.com/");
 
             Document doc = Jsoup.parse(driver.getPageSource());
-            String compraDolar= doc.select("#compraDolar").text();
-            String ventaDolar= doc.select("#ventaDolar").text();
-            String compraArg=doc.select("#compraArg").text();
-            String ventaArg=doc.select("#ventaArg").text();
-            String compraReal=doc.select("#compraReal").text();
-            String ventaReal=doc.select("#ventaReal").text();
-            String compraEuro=doc.select("#compraEuro").text();
-            String ventaEuro=doc.select("#ventaEuro").text();
+            String compraDolar = doc.select("#compraDolar").text();
+            String ventaDolar = doc.select("#ventaDolar").text();
+            String compraArg = doc.select("#compraArg").text();
+            String ventaArg = doc.select("#ventaArg").text();
+            String compraReal = doc.select("#compraReal").text();
+            String ventaReal = doc.select("#ventaReal").text();
+            String compraEuro = doc.select("#compraEuro").text();
+            String ventaEuro = doc.select("#ventaEuro").text();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -225,4 +232,69 @@ public class StartupBean {
         }
     }
 
+    public JSONObject obtenerPuntosConCotizaciones(double longitud, double latitud) throws UnirestException {
+        List<Direccion> direcciones = direccionDao.findAll();
+
+        final String URL = "http://router.project-osrm.org/route/v1/driving/";
+        final String PARAMETERS = "?overview=false";
+
+        double distanciaSir = Double.MAX_VALUE;
+        double distanciaIndumex = Double.MAX_VALUE;
+        double distanciaGales = Double.MAX_VALUE;
+
+        Direccion direccionSir = new Direccion();
+        Direccion direccionIndumex = new Direccion();;
+        Direccion direccionGales = new Direccion();;
+
+        for (Direccion dir : direcciones) {
+            String uri = URL + longitud + "," + latitud + ";" + dir.getLatitud() + "," + dir.getLongitud() + PARAMETERS;
+            HttpResponse<String> response = Unirest.get(uri).header("cache-control", "no-cache").asString();
+            JSONObject json = new JSONObject(response.getBody());
+            JSONArray results = json.getJSONArray("routes");
+            JSONObject array = results.getJSONObject(0);
+
+            double distancia = array.getDouble("distance");
+
+            String casaCambiaria = dir.getCasaCambiaria().getNombre();
+
+            if (casaCambiaria.equals("Cambio SIR"))
+            {
+                if (distancia < distanciaSir)
+                {
+                    distanciaSir = distancia;
+                    direccionSir = dir;
+                }
+            }
+            else if (casaCambiaria.equals("Cambio Indumex"))
+            {
+                if (distancia < distanciaIndumex)
+                {
+                    distanciaIndumex = distancia;
+                    direccionIndumex = dir;
+                }
+            }
+            else
+            {
+                if (distancia < distanciaGales)
+                {
+                    distanciaGales = distancia;
+                    direccionGales = dir;
+                }
+            }
+
+        }
+
+        JSONObject cotizaciones = new JSONObject();
+
+        cotizaciones.put("direccionSir", direccionSir);
+        cotizaciones.put("distanciaSir", distanciaSir);
+
+        cotizaciones.put("direccionIndumex", direccionIndumex);
+        cotizaciones.put("distanciaIndumex", distanciaIndumex);
+
+        cotizaciones.put("direccionGales", direccionGales);
+        cotizaciones.put("distanciaGales", distanciaGales);
+
+        return cotizaciones;
+    }
 }
