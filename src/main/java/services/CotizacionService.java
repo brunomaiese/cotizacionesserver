@@ -41,8 +41,8 @@ public class CotizacionService {
     @Path("/cotizaciones")
     public RespuestaCotizaciones obtenerCotizaciones() throws UnirestException {
 
-        double latitud= -34.9185225;
-        double longitud = -56.1806222;
+        double latitud= -34.9090064;
+        double longitud = -56.2049017;
         RespuestaCotizaciones puntos = cotizacionesBL.obtenerPuntosConCotizaciones(longitud, latitud);
         return puntos;
     }
