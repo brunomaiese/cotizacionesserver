@@ -70,7 +70,6 @@ public class StartupBean {
     public void startupTasks() {
         //cargarDatos();
 
-
     }
 
     private void cargarDatos() {
@@ -161,7 +160,7 @@ public class StartupBean {
             System.out.println("OBTENIENDO COTIZACIONES");
             // load page using HTML Unit and fire scripts
             //C:\Users\brunom.ANC\Desktop\chromedriver_win32
-            System.setProperty("webdriver.chrome.driver", "C:\\Users\\brunom.ANC\\Desktop\\chromedriver_win32\\chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver", "C:\\Users\\diegoi\\Desktop\\chromedriver_win32\\chromedriver.exe");
             WebDriver driver = new ChromeDriver();
             driver.get("https://www.cambiosir.com.uy");
 
@@ -170,17 +169,53 @@ public class StartupBean {
             Element iframe = doc.select("iframe").first();
             String iframeSrc = iframe.attr("src");
             if (iframeSrc != null) {
+
+                CasaCambiaria cambioSir = casaCambiariaDao.findSingleResultByField("nombre", "Cambio SIR");
+
                 WebDriver driver2 = new ChromeDriver();
 
                 driver2.get(iframeSrc);
                 Document iframeContentDoc = Jsoup.parse(driver2.getPageSource());
                 Element table = iframeContentDoc.select("#theTable").first();
                 List<Element> rows = table.select("tr");
+
                 for (Element e : rows) {
                     //TODO recorrer y guardar las cotizaciones
-                    e.select("td");
+                    List<Element> valores =  e.select("td");
+
+                    if (valores.size() == 3) {
+                        Element monedaHTML = valores.get(0);
+                        Element compraHTML = valores.get(1);
+                        Element ventaHTML = valores.get(2);
+
+                        String moneda = monedaHTML.text();
+                        String compra = compraHTML.text();
+                        String venta = ventaHTML.text();
+
+                        if (moneda.equals("DÓLAR"))
+                        {
+                            cambioSir.setDolarCompra(Double.parseDouble(compra));
+                            cambioSir.setDolarVenta(Double.parseDouble(venta));
+                        }
+                        else if ( moneda.equals("ARGENTINO"))
+                        {
+                            cambioSir.setArgentinoCompra(Double.parseDouble(compra));
+                            cambioSir.setArgentinoVenta(Double.parseDouble(venta));
+                        }
+                        else if (moneda.equals("REAL"))
+                        {
+                            cambioSir.setRealCompra(Double.parseDouble(compra));
+                            cambioSir.setRealVenta(Double.parseDouble(venta));
+                        }
+                        else if (moneda.equals("EURO"))
+                        {
+                            cambioSir.setEuroCompra(Double.parseDouble(compra));
+                            cambioSir.setEuroVenta(Double.parseDouble(venta));
+                        }
+                    }
                 }
 
+                casaCambiariaDao.merge(cambioSir);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -191,7 +226,7 @@ public class StartupBean {
     public void obtenerCotizacionesIndumex() throws IOException {
         try {
             System.out.println("OBTENIENDO COTIZACIONES");
-            System.setProperty("webdriver.chrome.driver", "C:\\Users\\brunom.ANC\\Desktop\\chromedriver_win32\\chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver", "C:\\Users\\diegoi\\Desktop\\chromedriver_win32\\chromedriver.exe");
             WebDriver driver = new ChromeDriver();
             driver.get("https://www.indumex.com/");
 
@@ -205,6 +240,22 @@ public class StartupBean {
             String compraEuro = doc.select("#compraEuro").text();
             String ventaEuro = doc.select("#ventaEuro").text();
 
+            CasaCambiaria cambioIndumex = casaCambiariaDao.findSingleResultByField("nombre", "Cambio Indumex");
+
+            cambioIndumex.setDolarCompra(Double.parseDouble(compraDolar));
+            cambioIndumex.setDolarVenta(Double.parseDouble(ventaDolar));
+
+            cambioIndumex.setArgentinoCompra(Double.parseDouble(compraArg));
+            cambioIndumex.setArgentinoVenta(Double.parseDouble(ventaArg));
+
+            cambioIndumex.setRealCompra(Double.parseDouble(compraReal));
+            cambioIndumex.setRealVenta(Double.parseDouble(ventaReal));
+
+            cambioIndumex.setEuroCompra(Double.parseDouble(compraEuro));
+            cambioIndumex.setEuroVenta(Double.parseDouble(ventaEuro));
+
+            casaCambiariaDao.merge(cambioIndumex);
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -214,12 +265,37 @@ public class StartupBean {
     public void obtenerCotizacionesGales() throws IOException {
         try {
             System.out.println("OBTENIENDO COTIZACIONES");
-            System.setProperty("webdriver.chrome.driver", "C:\\Users\\brunom.ANC\\Desktop\\chromedriver_win32\\chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver", "C:\\Users\\diegoi\\Desktop\\chromedriver_win32\\chromedriver.exe");
             WebDriver driver = new ChromeDriver();
             driver.get("http://www.gales.com.uy/home/");
 
             Document doc = Jsoup.parse(driver.getPageSource());
-            doc.select("table").select("tr").select("td");
+            List<Element> valores = doc.select("table").select("tr").select("td");
+
+            CasaCambiaria cambioGales = casaCambiariaDao.findSingleResultByField("nombre", "Cambio Gales");
+
+            String compraDolar = valores.get(1).text().replace(',', '.');
+            String ventaDolar = valores.get(2).text().replace(',', '.');
+            String compraArg =  valores.get(4).text().replace(',', '.');
+            String ventaArg =  valores.get(5).text().replace(',', '.');
+            String compraReal =  valores.get(7).text().replace(',', '.');
+            String ventaReal =  valores.get(8).text().replace(',', '.');
+            String compraEuro =  valores.get(10).text().replace(',', '.');;
+            String ventaEuro =  valores.get(11).text().replace(',', '.');;
+
+            cambioGales.setDolarCompra(Double.parseDouble(compraDolar));
+            cambioGales.setDolarVenta(Double.parseDouble(ventaDolar));
+
+            cambioGales.setArgentinoCompra(Double.parseDouble(compraArg));
+            cambioGales.setArgentinoVenta(Double.parseDouble(ventaArg));
+
+            cambioGales.setRealCompra(Double.parseDouble(compraReal));
+            cambioGales.setRealVenta(Double.parseDouble(ventaReal));
+
+            cambioGales.setEuroCompra(Double.parseDouble(compraEuro));
+            cambioGales.setEuroVenta(Double.parseDouble(ventaEuro));
+
+            casaCambiariaDao.merge(cambioGales);
             //TODO recorrer y guardar las cotizaciones
         } catch (Exception e) {
             System.out.println(e.getMessage());
