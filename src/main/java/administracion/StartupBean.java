@@ -134,6 +134,7 @@ public class StartupBean {
         direccionDao.create(direccionSir4);
         direccionDao.create(direccionSir5);
         direccionDao.create(direccionSir6);
+        direccionDao.create(direccionSir7);
 
         direccionDao.create(direccionIndumex1);
         direccionDao.create(direccionIndumex2);
