@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.util.LinkedList;
 import java.util.List;
 
 @Stateless
@@ -24,7 +25,17 @@ public class CotizacionesBL {
     DireccionDao direccionDao;
 
     public RespuestaCotizaciones obtenerPuntosConCotizaciones(double longitud, double latitud) throws UnirestException {
-        List<Direccion> direcciones = direccionDao.findAll();
+        //List<Direccion> direcciones = direccionDao.findAll();
+
+        List<Direccion> direcciones = new LinkedList<Direccion>();
+
+        Direccion dirSiR =  direccionDao.findSingleResultByField("direccion","Misiones 1374");
+        Direccion dirIndumex = direccionDao.findSingleResultByField("direccion","Rincon 473");
+        Direccion dirGales =  direccionDao.findSingleResultByField("direccion","Rincon 483");
+
+        direcciones.add(dirSiR);
+        direcciones.add(dirGales);
+        direcciones.add(dirIndumex);
 
         final String URL = "http://router.project-osrm.org/route/v1/driving/";
         final String PARAMETERS = "?overview=false";
@@ -38,6 +49,7 @@ public class CotizacionesBL {
         Direccion direccionGales = new Direccion();;
 
         for (Direccion dir : direcciones) {
+
             String uri = URL + longitud + "," + latitud + ";" + dir.getLongitud() + "," + dir.getLatitud() + PARAMETERS;
             HttpResponse<String> response = Unirest.get(uri).header("cache-control", "no-cache").asString();
             JSONObject json = new JSONObject(response.getBody());
